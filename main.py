@@ -42,8 +42,10 @@ def parens_match_iterative(mylist):
     >>>parens_match_iterative(['('])
     False
     """
-    ### TODO
-    pass
+    if iterate(parens_update, 0 ,mylist) == 0:
+        return True
+    else:
+        return False
 
 
 def parens_update(current_output, next_input):
@@ -58,8 +60,14 @@ def parens_update(current_output, next_input):
     Returns:
       the updated value of `current_output`
     """
-    ###TODO
-    pass
+    if current_output < 0:
+        return current_output
+    else:
+        if next_input == "(":
+            current_output +=1
+        elif next_input == ")":
+            current_output -=1
+        return current_output
 
 
 def test_parens_match_iterative():
@@ -87,8 +95,22 @@ def parens_match_scan(mylist):
     False
     
     """
-    ###TODO
-    pass
+    newlist = []
+    for i in range(0,len(mylist)):
+        newlist.append(paren_map(mylist[i]))
+
+    scanned = scan(plus,0,newlist)
+    minimum = scan(min_f,0,scanned[0])
+    if minimum[-1] < 0:
+        return False
+   
+    if scanned[-1] == 0:
+        return True
+    else:
+        return False
+
+def plus(x,y):
+    return x+y
 
 def scan(f, id_, a):
     """
@@ -148,6 +170,7 @@ def parens_match_dc(mylist):
       True if parens_match_dc_helper returns (0,0); otherwise False
     """
     # done.
+    #return parens_match_dc_helper(mylist)
     n_unmatched_left, n_unmatched_right = parens_match_dc_helper(mylist)
     return n_unmatched_left==0 and n_unmatched_right==0
 
@@ -160,8 +183,27 @@ def parens_match_dc_helper(mylist):
       L is the number of unmatched left parentheses. This output is used by 
       parens_match_dc to return the final True or False value
     """
-    ###TODO
-    pass
+    
+    if len(mylist) == 0:
+        return (0,0)
+    if len(mylist) == 1:  
+        if mylist[0] == ")":
+            return (1,0)
+        elif mylist[0] == "(":
+            return (0,1)
+        else:
+            return (0,0)
+    leftside = parens_match_dc_helper(mylist[0:int(len(mylist)/2)])
+    rightside = parens_match_dc_helper(mylist[int(len(mylist)/2):])
+    if leftside[1] != 0 and rightside[0] != 0:
+        subvalue = min(leftside[1],rightside[0])
+        return (leftside[0]+(rightside[0] - subvalue), (leftside[1] -subvalue)+rightside[1])
+    else:
+        return (leftside[0]+rightside[0], leftside[1]+rightside[1])
+    
+
+
+
     
 
 def test_parens_match_dc():
